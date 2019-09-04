@@ -48,6 +48,7 @@ public class ObservableTesting {
 //
 //        //从1开始产生六个数
         Observable.range(1,6);
+
 //        //空的Observable对象
 //        Observable.empty();
 //        //用于测试
