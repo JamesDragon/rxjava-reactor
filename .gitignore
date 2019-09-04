@@ -21,3 +21,14 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+.idea/$PRODUCT_WORKSPACE_FILE$
+.idea/compiler.xml
+.idea/misc.xml
+java9-flow/target/generated-sources/
+java9-flow/target/generated-test-sources/
+rxjava-reactor.iml
+/rxjava-observable/rxjava-observable.iml
+/.idea/
+java9-flow/src/main/resources/
+rxjava-observable/src/main/resources/
+rxjava-observable/src/test/
