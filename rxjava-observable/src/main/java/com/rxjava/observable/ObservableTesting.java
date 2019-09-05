@@ -4,6 +4,7 @@ package com.rxjava.observable;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Scheduler;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.internal.operators.observable.ObservableCreate;
 
@@ -12,6 +13,8 @@ import java.time.Duration;
 import java.util.Collections;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ObservableTesting {
     public static void main(String[] args) throws InterruptedException {
@@ -47,7 +50,7 @@ public class ObservableTesting {
 //        }).subscribe();
 //
 //        //从1开始产生六个数
-        Observable.range(1,6);
+        Observable.range(1, 6);
 
 //        //空的Observable对象
 //        Observable.empty();
@@ -55,6 +58,9 @@ public class ObservableTesting {
 //        Observable.never();
 //
 //        Observable.error(new RuntimeException());
+
+
+
 
 
     }
