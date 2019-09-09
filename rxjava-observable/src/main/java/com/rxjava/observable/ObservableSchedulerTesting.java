@@ -8,20 +8,17 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class ObservableSchedulerTesting {
     public static void main(String[] args) throws InterruptedException {
-        AtomicInteger counter = new AtomicInteger(0);
 
-        //间隔一定时间执行订阅内容
-        Disposable disposable = Observable.interval(1, TimeUnit.SECONDS).subscribe(num -> {
-            int number = counter.incrementAndGet();
-            System.out.println(number);
-        }, Throwable::printStackTrace, () -> {
-            System.out.println("完成了");
-        });
-
-        Thread.sleep(10000);
-        disposable.dispose();
-
-
+//        //间隔一定时间执行订阅内容
+//        Disposable disposable = Observable.interval(1, TimeUnit.SECONDS).subscribe(num -> {
+//            int number = counter.incrementAndGet();
+//            System.out.println(number);
+//        }, Throwable::printStackTrace, () -> {
+//            System.out.println("完成了");
+//        });
+//
+//        Thread.sleep(10000);
+//        disposable.dispose();
     }
 
     /**

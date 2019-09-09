@@ -18,14 +18,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class ObservableTesting {
     public static void main(String[] args) throws InterruptedException {
-//        Observable<Object> observable = Observable.create(new ObservableOnSubscribe<Object>() {
-//            @Override
-//            public void subscribe(ObservableEmitter<Object> observableEmitter) throws Exception {
-//                observableEmitter.onNext(ThreadLocalRandom.current().nextLong(1000000000));
-//                observableEmitter.onComplete();
-//            }
-//            //紧跟缓存
-//        }).cache();
+        Observable<Object> observable = Observable.create(new ObservableOnSubscribe<Object>() {
+            @Override
+            public void subscribe(ObservableEmitter<Object> observableEmitter) throws Exception {
+                observableEmitter.onNext(ThreadLocalRandom.current().nextLong(1000000000));
+                observableEmitter.onComplete();
+            }
+            //紧跟缓存
+        }).cache();
 //        //通过内部类衔接
 //
 //        observable.subscribe(consumer -> {
