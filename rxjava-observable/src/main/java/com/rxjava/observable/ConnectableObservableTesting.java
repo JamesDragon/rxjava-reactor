@@ -1,17 +1,116 @@
 package com.rxjava.observable;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.observables.ConnectableObservable;
 
 import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ConnectableObservableTesting {
     public static void main(String[] args) throws InterruptedException {
 
+        ExecutorService executorService = ForkJoinPool.commonPool();
+
+        Observable<Integer> publish = Observable.<Integer>create(emitter -> {
+            AtomicInteger counter = new AtomicInteger(0);
+            Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10).forEach(num -> {
+                executorService.submit(() -> {
+                    emitter.onNext(num);
+                    if (counter.incrementAndGet() > 10) {
+                        executorService.shutdownNow();
+                        emitter.onComplete();
+                    }
+                });
+            });
+        }).share();
+
+        publish.subscribe(a -> {
+            System.out.println("一：" + a);
+            Thread.sleep(1000);
+        }, Throwable::printStackTrace, () -> System.out.println("一完成了"));
+        Thread.sleep(1000);
+        publish.subscribe(a -> {
+            System.out.println("壹：" + a);
+            Thread.sleep(1000);
+        }, Throwable::printStackTrace, () -> System.out.println("二完成了"));
+
+        Thread.sleep(15000);
+
 //        connectableObservable();
 
 //        observableCache();
+    }
+
+    /**
+     * {@link Observable#share()}封装了Observable.publish().refCount()的方法
+     */
+    static void share() throws InterruptedException {
+        ExecutorService executorService = ForkJoinPool.commonPool();
+
+        Observable<Integer> publish = Observable.<Integer>create(emitter -> {
+            AtomicInteger counter = new AtomicInteger(0);
+            Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10).forEach(num -> {
+                //使订阅者异步执行
+                executorService.submit(() -> {
+                    //异步消费值
+                    emitter.onNext(num);
+                    if (counter.incrementAndGet() > 10) {
+                        executorService.shutdownNow();
+                        emitter.onComplete();
+                    }
+                });
+            });
+        }).share();
+
+        publish.subscribe(a -> {
+            System.out.println("一：" + a);
+            Thread.sleep(1000);
+        }, Throwable::printStackTrace, () -> System.out.println("一完成了"));
+        Thread.sleep(1000);
+        publish.subscribe(a -> {
+            System.out.println("壹：" + a);
+            Thread.sleep(1000);
+        }, Throwable::printStackTrace, () -> System.out.println("壹完成了"));
+
+        Thread.sleep(15000);
+    }
+
+    /**
+     * 适用于消费途中再次增加消费者的场景，不过publish不会存储已经消费的元素
+     */
+    static void refCount() throws InterruptedException {
+        ExecutorService executorService = ForkJoinPool.commonPool();
+
+        Observable<Integer> publish = Observable.<Integer>create(emitter -> {
+            AtomicInteger counter = new AtomicInteger(0);
+            Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10).forEach(num -> {
+                executorService.submit(() -> {
+                    emitter.onNext(num);
+                    if (counter.incrementAndGet() > 10) {
+                        executorService.shutdownNow();
+                        emitter.onComplete();
+                    }
+                });
+            });
+        }).publish().refCount();
+
+        publish.subscribe(a -> {
+            System.out.println("一：" + a);
+            Thread.sleep(1000);
+        }, Throwable::printStackTrace, () -> System.out.println("一完成了"));
+        Thread.sleep(1000);
+        publish.subscribe(a -> {
+            System.out.println("壹：" + a);
+            Thread.sleep(1000);
+        }, Throwable::printStackTrace, () -> System.out.println("二完成了"));
+
+        Thread.sleep(15000);
     }
 
     /**
