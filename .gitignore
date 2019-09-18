@@ -32,3 +32,4 @@ rxjava-reactor.iml
 java9-flow/src/main/resources/
 rxjava-observable/src/main/resources/
 rxjava-observable/src/test/
+/rxjava-observable/target/classes/META-INF/rxjava-observable.kotlin_module
