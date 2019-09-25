@@ -2,11 +2,16 @@ package com.rxjava.observable;
 
 import io.reactivex.Observable;
 
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class MergeObservable {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
 //        mergeMethod();
 
-        zipMethod();
+//        zipMethod();
+
+        combineLatest();
     }
 
     /**
@@ -34,4 +39,23 @@ public class MergeObservable {
 
         Observable.zip(just1, just2, (j1, j2) -> j1 + " = " + j2).subscribe(System.out::println);
     }
+
+    /**
+     * 寻找最近的一个元素进行合并
+     */
+    static void combineLatest() throws InterruptedException {
+//        Observable.combineLatest(
+//                Observable.fromArray(1, 2, 3, 4, 5),
+//                Observable.fromArray("1", "2", "3", "4"), (item1, item2) -> item1 + ":" + item2
+//        ).subscribe(System.out::println);
+
+        Observable.combineLatest(
+                Observable.interval(1, TimeUnit.SECONDS).map(x -> "Java-" + x),
+                Observable.interval(2, TimeUnit.SECONDS).map(x -> "Observable-" + x), (item1, item2) -> item1 + ":" + item2
+        ).subscribe(System.out::println);
+
+        Thread.sleep(6000);
+    }
+
+
 }
