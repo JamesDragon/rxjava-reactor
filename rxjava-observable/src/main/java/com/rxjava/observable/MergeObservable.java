@@ -2,6 +2,7 @@ package com.rxjava.observable;
 
 import io.reactivex.Observable;
 
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -11,7 +12,15 @@ public class MergeObservable {
 
 //        zipMethod();
 
-        combineLatest();
+//        combineLatest();
+
+//        withLatestFrom();
+
+//        amb();
+
+//        reduce();
+
+        collect();
     }
 
     /**
@@ -57,5 +66,41 @@ public class MergeObservable {
         Thread.sleep(6000);
     }
 
+    /**
+     * A.withLatestForm(B,(t1,t2) -> t1+t2)的方式声明，A会与B最近的一个元素相结合
+     */
+    static void withLatestFrom() {
+        Observable<Integer> observable1 = Observable.fromArray(1, 2, 3, 4, 5);
+        //取最近的元素
+        Observable<String> observable2 = Observable.fromArray("苹果", "梨子", "西瓜");
 
+        observable1.withLatestFrom(observable2, (t1, t2) -> t1 + t2).subscribe(System.out::println);
+    }
+
+    /**
+     * 只消费优先进入的队列
+     */
+    static void amb() {
+        Observable.ambArray(
+                Observable.fromArray(1, 2, 3, 4, 5).delay(2, TimeUnit.SECONDS),
+                Observable.fromArray("苹果", "梨子", "西瓜"))
+                .subscribe(System.out::println);
+    }
+
+    /**
+     * 聚合操作
+     */
+    static void reduce() {
+        Observable.range(1, 5).reduceWith(ArrayList::new, (list, item) -> {
+            list.add(item);
+            return list;
+        }).subscribe(item -> item.forEach(System.out::println));
+    }
+
+    /**
+     * 不用返回的归集操作
+     */
+    static void collect(){
+        Observable.range(1,5).collect(ArrayList::new,(list,item) -> list.add(item)).subscribe(System.out::println);
+    }
 }
