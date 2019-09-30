@@ -2,6 +2,7 @@ package com.rxjava.observable;
 
 import io.reactivex.Observable;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -20,7 +21,9 @@ public class MergeObservable {
 
 //        reduce();
 
-        collect();
+//        collect();
+
+        distinct();
     }
 
     /**
@@ -100,7 +103,21 @@ public class MergeObservable {
     /**
      * 不用返回的归集操作
      */
-    static void collect(){
-        Observable.range(1,5).collect(ArrayList::new,(list,item) -> list.add(item)).subscribe(System.out::println);
+    static void collect() {
+        Observable.range(1, 5).collect(ArrayList::new, (list, item) -> list.add(item)).subscribe(System.out::println);
     }
+
+    /**
+     * 元素的去重操作
+     */
+    static void distinct() {
+        Observable.just(1, 2, 2, 3, 4).distinct().subscribe(System.out::println);
+        System.out.println("======================================");
+        Observable.just(
+                LocalDate.of(2019, 1, 10),
+                LocalDate.of(2019, 2, 10),
+                LocalDate.of(2019, 1, 10)
+        ).distinct(LocalDate::getMonth).subscribe(System.out::println);
+    }
+
 }
