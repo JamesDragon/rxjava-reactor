@@ -23,7 +23,9 @@ public class MergeObservable {
 
 //        collect();
 
-        distinct();
+//        distinct();
+
+        distinctUntilChanged();
     }
 
     /**
@@ -118,6 +120,22 @@ public class MergeObservable {
                 LocalDate.of(2019, 2, 10),
                 LocalDate.of(2019, 1, 10)
         ).distinct(LocalDate::getMonth).subscribe(System.out::println);
+    }
+
+    /**
+     * 将连续重复的元素进行去重操作
+     */
+    static void distinctUntilChanged(){
+        Observable.just("a","a","a","b","b","a","c","c")
+                .distinctUntilChanged()
+                .subscribe(element -> System.out.println(element));
+
+        System.out.println("====================================================");
+
+        Observable.just("a","a","a","b","b","a","c","c")
+                .distinctUntilChanged()
+                .subscribe(element -> System.out.println(element));
+
     }
 
 }
