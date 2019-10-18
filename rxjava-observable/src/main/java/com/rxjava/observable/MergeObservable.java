@@ -1,9 +1,12 @@
 package com.rxjava.observable;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableTransformer;
 
+import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -25,7 +28,9 @@ public class MergeObservable {
 
 //        distinct();
 
-        distinctUntilChanged();
+//        distinctUntilChanged();
+
+        compose();
     }
 
     /**
@@ -125,17 +130,47 @@ public class MergeObservable {
     /**
      * 将连续重复的元素进行去重操作
      */
-    static void distinctUntilChanged(){
-        Observable.just("a","a","a","b","b","a","c","c")
+    static void distinctUntilChanged() {
+        Observable.just("a", "a", "a", "b", "b", "a", "c", "c")
                 .distinctUntilChanged()
                 .subscribe(element -> System.out.println(element));
 
         System.out.println("====================================================");
 
-        Observable.just("a","a","a","b","b","a","c","c")
+        Observable.just("a", "a", "a", "b", "b", "a", "c", "c")
                 .distinctUntilChanged()
                 .subscribe(element -> System.out.println(element));
 
+    }
+
+    /**
+     * 针对重复的逻辑做聚合操作
+     */
+    static void compose() {
+//        Observable.just("apple", "jack", "ipod")
+//                .collect(ArrayList::new, ArrayList::add)
+//                .map(list -> Arrays.toString(list.toArray()))
+//                .subscribe(e -> System.out.println(e));
+//
+//        Observable.just("11", "22", "34")
+//                .collect(ArrayList::new, ArrayList::add)
+//                .map(list -> Arrays.toString(list.toArray()))
+//                .subscribe(e -> System.out.println(e));
+
+        //======================聚合操作==============================
+
+        Observable.just("apple", "jack", "ipod")
+                .compose(composeToArrayList())
+                .subscribe(e -> System.out.println(e));
+
+        Observable.just("11", "22", "34")
+                .compose(composeToArrayList())
+                .subscribe(e -> System.out.println(e));
+    }
+
+    static <T> ObservableTransformer<T, ArrayList<T>> composeToArrayList() {
+        return upstream -> upstream.collect(ArrayList<T>::new, ArrayList::add)
+                .map(list -> list).toObservable();
     }
 
 }
