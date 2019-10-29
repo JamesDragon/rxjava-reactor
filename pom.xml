@@ -11,6 +11,7 @@
     <modules>
         <module>java9-flow</module>
         <module>rxjava-observable</module>
+        <module>rxjava-flowable</module>
     </modules>
 
     <build>
